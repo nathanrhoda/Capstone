@@ -14,4 +14,10 @@ The capstone will build upon the knowledge you have gained in the course in orde
 * [ZoKrates](https://github.com/Zokrates/ZoKrates)
 
 
+# How to Test
+
+* Execute tests from the eth-contracts folder
+* From command line and type `truffle test` to run all tests 
+* To run individual test file type `truffle test ./test/TestERC721Mintable.js` where TestERC721Mintable.js refers to test file you want to test.
+
 https://review.udacity.com/#!/rubrics/1712/view

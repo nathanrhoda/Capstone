@@ -52,11 +52,49 @@ contract Ownable {
 }
 
 //  TODO's: Create a Pausable contract that inherits from the Ownable contract
-//  1) create a private '_paused' variable of type bool
-//  2) create a public setter using the inherited onlyOwner modifier 
-//  3) create an internal constructor that sets the _paused variable to false
-//  4) create 'whenNotPaused' & 'paused' modifier that throws in the appropriate situation
-//  5) create a Paused & Unpaused event that emits the address that triggered the event
+
+
+
+
+contract Pausable is Ownable{
+    //  1) create a private '_paused' variable of type bool
+    bool private _paused;
+
+    //  5) create a Paused & Unpaused event that emits the address that triggered the event
+    event ContractHasBeenPaused(address addr);
+    event ContractHasBeenUnpaused(address addr);
+
+    //  2) create a public setter using the inherited onlyOwner modifier 
+    function togglePaused
+                (
+                    bool toggle
+                )
+                onlyOwner
+    {
+        _paused = toggle;
+    }
+
+    //  3) create an internal constructor that sets the _paused variable to false
+    constructor() internal
+    {
+        _paused = false;
+    }
+
+    //  4) create 'whenNotPaused' & 'paused' modifier that throws in the appropriate situation
+    modifier whenNotPaused()
+    {
+        require(_paused == false, "Contract is paused");
+        _;
+    }
+
+    modifier paused()
+    {
+        require(_paused == true, "Contract is not paused");
+        _;
+    }
+        
+}
+
 
 contract ERC165 {
     bytes4 private constant _INTERFACE_ID_ERC165 = 0x01ffc9a7;
@@ -489,6 +527,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 //      -takes in a 'to' address, tokenId, and tokenURI as parameters
 //      -returns a true boolean upon completion of the function
 //      -calls the superclass mint and setTokenURI functions
+
 
 
 

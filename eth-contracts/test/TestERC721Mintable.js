@@ -10,10 +10,13 @@ contract('TestERC721Mintable', accounts => {
             this.contract = await ERC721MintableComplete.new({from: account_one});
 
             // TODO: mint multiple tokens
+            this.contract.mint(account_one, 1, "http://udacity.com/token/")
+            this.contract.mint(account_one, 2, "http://udacity.com/token/")            
         })
 
         it('should return total supply', async function () { 
-            
+            let total = this.contract.totalSupply({from: account_one});
+            assert.equal(total, 2, "Tokens should be equal to 2")
         })
 
         it('should get token balance', async function () { 

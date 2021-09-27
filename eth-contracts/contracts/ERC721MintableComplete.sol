@@ -21,6 +21,7 @@ contract Ownable {
 
     function getOwner()
                 public
+                view
                 returns (address)
                        
     {
@@ -523,6 +524,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     // TODO: create external getter functions for name, symbol, and baseTokenURI
     function getName()
                 external
+                view
                 returns (string memory)
     {
         return _name;
@@ -530,6 +532,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 
     function getSymbol()
                 external
+                view
                 returns (string memory)
     {
         return _name;
@@ -537,6 +540,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 
     function getbaseTokenURI()
                 external
+                view
                 returns (string memory)
     {
         return _baseTokenURI;
@@ -586,8 +590,7 @@ contract ERC721MintableComplete is ERC721Metadata {
 
     function mint(
                     address to, 
-                    uint256 tokenId, 
-                    string memory tokenURI
+                    uint256 tokenId
                 ) 
                 public
                 onlyOwner

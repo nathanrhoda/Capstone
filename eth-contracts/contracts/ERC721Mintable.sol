@@ -16,7 +16,7 @@ contract Ownable {
     constructor() internal
     {
         _owner = msg.sender;
-        OwnershipTransferred(address(0), _owner);
+        emit OwnershipTransferred(address(0), _owner);
     }
 
     function getOwner()
@@ -36,7 +36,7 @@ contract Ownable {
 
     modifier isValidAddress(address addr)
     {
-        require(newOwner != address(0), "New owner addres is not valid");
+        require(addr != address(0), "New owner addres is not valid");
         _;
     }
 
@@ -47,7 +47,7 @@ contract Ownable {
                 isValidAddress(newOwner) 
     {
         _owner = newOwner;
-        OwnershipTransferred(_owner, newOwner);
+        emit OwnershipTransferred(_owner, newOwner);
     }
 }
 
@@ -69,6 +69,7 @@ contract Pausable is Ownable{
                 (
                     bool toggle
                 )
+                public
                 onlyOwner
     {
         _paused = toggle;
@@ -185,7 +186,7 @@ contract ERC721 is Pausable, ERC165 {
 
         require(msg.sender == getOwner() || isApprovedForAll(msg.sender, to) == true, "Caller is not authorized to grant approval rights" );
 
-        _tokenApprovals[to] = tokenId;
+        _tokenApprovals[tokenId] = to;
         
         emit Approval(tokenOwner, to, tokenId);
     }
@@ -495,7 +496,6 @@ contract ERC721Enumerable is ERC165, ERC721 {
 contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     
     // TODO: Create private vars for token _name, _symbol, and _baseTokenURI (string)
-    string private token;
     string private _name;
     string private _symbol;
     string private _baseTokenURI;
@@ -514,35 +514,37 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 
     constructor (string memory name, string memory symbol, string memory baseTokenURI) public {
         // TODO: set instance var values
-
+        _name = name;
+        _symbol = symbol;
+        _baseTokenURI = baseTokenURI;
         _registerInterface(_INTERFACE_ID_ERC721_METADATA);
     }
 
     // TODO: create external getter functions for name, symbol, and baseTokenURI
     function getName()
                 external
-                returns (string)
+                returns (string memory)
     {
         return _name;
     }
 
     function getSymbol()
                 external
-                returns (string)
+                returns (string memory)
     {
         return _name;
     }
 
     function getbaseTokenURI()
                 external
-                returns (string)
+                returns (string memory)
     {
         return _baseTokenURI;
     }
 
     function tokenURI(uint256 tokenId) external view returns (string memory) {
         require(_exists(tokenId));
-        return _tokenURIs[tokenId];
+        return tokenURIs[tokenId];
     }
 
 
@@ -559,7 +561,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
                 internal 
     {
         require(_exists(tokenId), "Token does not exist");
-        _tokenURIs[tokenId] = strConcat(_baseTokenURI, uint2str(tokenId));
+        tokenURIs[tokenId] = strConcat(_baseTokenURI, uint2str(tokenId));
     }
 }
 
@@ -571,7 +573,27 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 //      -takes in a 'to' address, tokenId, and tokenURI as parameters
 //      -returns a true boolean upon completion of the function
 //      -calls the superclass mint and setTokenURI functions
+contract ERC721MintableComplete is ERC721Metadata {
+    constructor
+                (
+                    string memory name, 
+                    string memory symbol
+                )
+                ERC721Metadata(name, symbol,  "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/")
+                public 
+    {        
+    }
 
-
-
-
+    function mint(
+                    address to, 
+                    uint256 tokenId, 
+                    string memory tokenURI
+                ) 
+                public
+                onlyOwner
+                returns (bool)
+    {
+        super._mint(to, tokenId);        
+        setTokenUri(tokenId);
+    }
+}

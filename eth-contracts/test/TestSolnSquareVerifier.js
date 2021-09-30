@@ -13,12 +13,12 @@ contract('SolnSquareVerifier', accounts => {
         beforeEach(async function () {   
             const verifier = await Verifier.new({from: account_one});          
             this.contract = await SolnSquareVerifier.new(verifier.address, "UDACITY TOKEN", "UDC");            
-        })
+        }) 
 
         //Test if a new solution can be added for contract - SolnSquareVerifier
         it('should be able to add a new solution to contract', async function () {             
                     
-            let tx = await this.contract.add(Proof.proof.a, Proof.proof.b, Proof.proof.c, Proof.inputs, {from: account_one});                        
+            let tx = await this.contract.add(Proof.proof.a, Proof.proof.b, Proof.proof.c, Proof.inputs, {from: account_one});                          
             truffleAssert.eventEmitted(tx, 'SolutionAdded', (ev) => {
                 return ev.id == 1;
             });                                    

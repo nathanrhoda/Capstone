@@ -14,7 +14,7 @@ contract SolnSquareVerifier is ERC721MintableComplete{
         verifierContract = IVerifier(addr);        
     }
 
-    // TODO define a solutions struct that can hold an key & an address
+    // TODO define a solutions struct that can hold an index & an address
     struct Solution {
         bytes32 key;
         uint256 index;
@@ -72,14 +72,7 @@ contract SolnSquareVerifier is ERC721MintableComplete{
         bool verified = verifierContract.verifyTx(a, b, c, input);
         require(verified == true, "Solution could not be verified");
 
-        bool flag = false;
-        bytes32 key;                     
-        for(uint8 i=0; i<solutions.length; i++){
-            flag = true;
-            if(solutions[i].addr == addr) {                 
-                key = solutions[i].key;                       
-            }                    
-        }
+        bytes32 key = getSolutionKey(a, b, c, input);        
         
         require(uniqueSolutions[key].minted == false, "This solution has been used before.It is already minted");  
         require(uniqueSolutions[key].addr != address(0), "This address is invalid SolnSquareVerifier");                                  
@@ -119,12 +112,12 @@ contract SolnSquareVerifier is ERC721MintableComplete{
 
     function getSolutionKey
         (
-                    uint[2] calldata a,
-                    uint[2][2] calldata b, 
-                    uint[2] calldata c,
-                    uint[2] calldata input
+                    uint[2] memory a,
+                    uint[2][2] memory b, 
+                    uint[2] memory c,
+                    uint[2] memory input
         )
-        external
+        public
         pure
         returns (bytes32)
     {

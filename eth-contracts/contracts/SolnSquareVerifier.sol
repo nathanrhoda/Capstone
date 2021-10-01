@@ -44,17 +44,10 @@ contract SolnSquareVerifier is ERC721MintableComplete{
     // TODO Create a function to add the solutions to the array and emit the event
     function add
             (
-                uint[2] calldata a,
-                uint[2][2] calldata b, 
-                uint[2] calldata c,
-                uint[2] calldata input             
+                bytes32 solutionKey    
             )             
             external
-    {                        
-        bool verified = verifierContract.verifyTx(a, b, c, input);
-        require(verified == true, "Solution could not be verified");
-
-        bytes32 solutionKey = keccak256(abi.encodePacked(a, b, c, input));
+    {                               
         Solution memory solution = Solution(solutionKey, counter,msg.sender,false);        
         solutions.push(solution);        
         
@@ -68,10 +61,17 @@ contract SolnSquareVerifier is ERC721MintableComplete{
     //  - make sure you handle metadata as well as tokenSuplly
     function mint
                 (     
+                    uint[2] calldata a,
+                    uint[2][2] calldata b, 
+                    uint[2] calldata c,
+                    uint[2] calldata input,            
                     address addr                                   
                 ) 
             external             
     {            
+        bool verified = verifierContract.verifyTx(a, b, c, input);
+        require(verified == true, "Solution could not be verified");
+
         bool flag = false;
         bytes32 key;                     
         for(uint8 i=0; i<solutions.length; i++){
@@ -100,7 +100,7 @@ contract SolnSquareVerifier is ERC721MintableComplete{
         return uniqueSolutions[key].minted;
     }
 
-       function getUniqueSolutionByIndex
+    function getUniqueSolutionByIndex
                 (
                     uint256 index
                 )
@@ -115,6 +115,20 @@ contract SolnSquareVerifier is ERC721MintableComplete{
             }                    
         }
         return uniqueSolutions[key].minted;
+    }
+
+    function getSolutionKey
+        (
+                    uint[2] calldata a,
+                    uint[2][2] calldata b, 
+                    uint[2] calldata c,
+                    uint[2] calldata input
+        )
+        external
+        pure
+        returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(a, b, c, input));
     }
 }
 

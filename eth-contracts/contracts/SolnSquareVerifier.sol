@@ -6,7 +6,7 @@ import "./ERC721MintableComplete.sol";
 contract SolnSquareVerifier is ERC721MintableComplete{
 
     IVerifier private verifierContract;
-    uint8 counter = 0;
+    uint8 counter = 1;
     constructor(address addr, string memory name, string memory symbol)
         ERC721MintableComplete(name, symbol)
         public
@@ -14,9 +14,10 @@ contract SolnSquareVerifier is ERC721MintableComplete{
         verifierContract = IVerifier(addr);        
     }
 
-    // TODO define a solutions struct that can hold an index & an address
+    // TODO define a solutions struct that can hold an key & an address
     struct Solution {
-        uint8 index;
+        bytes32 key;
+        uint256 index;
         address addr;
         bool minted;
     }
@@ -25,12 +26,12 @@ contract SolnSquareVerifier is ERC721MintableComplete{
     Solution[] solutions;
 
     // TODO define a mapping to store unique solutions submitted
-    mapping(uint256 => Solution) uniqueSolutions;
+    mapping(bytes32 => Solution) uniqueSolutions;
 
     // TODO Create an event to emit when a solution is added
     event SolutionAdded(uint256 id);    
 
-    event Minted(bool isMinted);    
+    event Minted(uint256 id);    
 
     modifier isUnique(address addr)
     {                   
@@ -49,37 +50,18 @@ contract SolnSquareVerifier is ERC721MintableComplete{
                 uint[2] calldata input             
             )             
             external
-    {                
+    {                        
         bool verified = verifierContract.verifyTx(a, b, c, input);
         require(verified == true, "Solution could not be verified");
-        Solution memory solution = Solution(1,msg.sender,false);
 
-        
+        bytes32 solutionKey = keccak256(abi.encodePacked(a, b, c, input));
+        Solution memory solution = Solution(solutionKey, counter,msg.sender,false);        
         solutions.push(solution);        
         
-        uniqueSolutions[solution.index] = solution;
-        require(uniqueSolutions[solution.index].addr != address(0), "This address should be valid");                                  
-        emit SolutionAdded(solution.index);
+        uniqueSolutions[solutionKey] = solution;        
         counter++;
+        emit SolutionAdded(solution.index);        
     }
-
-    function toString(address account) public pure returns(string memory) {
-        return toString(abi.encodePacked(account));
-    }
-
-    
-function toString(bytes memory data) public pure returns(string memory) {
-    bytes memory alphabet = "0123456789abcdef";
-
-    bytes memory str = new bytes(2 + data.length * 2);
-    str[0] = "0";
-    str[1] = "x";
-    for (uint i = 0; i < data.length; i++) {
-        str[2+i*2] = alphabet[uint(uint8(data[i] >> 4))];
-        str[3+i*2] = alphabet[uint(uint8(data[i] & 0x0f))];
-    }
-    return string(str);
-}
 
     // TODO Create a function to mint new NFT only after the solution has been verified
     //  - make sure the solution is unique (has not been used before)
@@ -90,32 +72,49 @@ function toString(bytes memory data) public pure returns(string memory) {
                 ) 
             external             
     {            
-        string memory a = toString(addr);
         bool flag = false;
-        uint8 index;                     
+        bytes32 key;                     
         for(uint8 i=0; i<solutions.length; i++){
             flag = true;
-            if(solutions[i].addr == msg.sender) {                 
-                index = solutions[i].index;                       
+            if(solutions[i].addr == addr) {                 
+                key = solutions[i].key;                       
             }                    
         }
         
-        require(uniqueSolutions[index].minted == false, "This solution has been used before.It is already minted");  
-        require(uniqueSolutions[index].addr != address(0), "This address is invalid SolnSquareVerifier");                                  
-        super.mint(uniqueSolutions[index].addr, index);        
-        uniqueSolutions[index].minted = true;
-        emit Minted(uniqueSolutions[index].minted);
+        require(uniqueSolutions[key].minted == false, "This solution has been used before.It is already minted");  
+        require(uniqueSolutions[key].addr != address(0), "This address is invalid SolnSquareVerifier");                                  
+        super.mint(uniqueSolutions[key].addr, uniqueSolutions[key].index);        
+        uniqueSolutions[key].minted = true;
+        emit Minted(uniqueSolutions[key].index);
     }
 
-    function getUniqueSolutionByIndex
+    function getUniqueSolutionByKey
                 (
-                    uint8 index
+                    bytes32 key
                 )
                 external
                 view
                 returns (bool)
     {
-        return uniqueSolutions[index].minted;
+        
+        return uniqueSolutions[key].minted;
+    }
+
+       function getUniqueSolutionByIndex
+                (
+                    uint256 index
+                )
+                external
+                view
+                returns (bool)
+    {
+        bytes32 key;        
+        for(uint8 i=0; i<solutions.length; i++){     
+            if(solutions[i].index == index) {                 
+                key = solutions[i].key;                       
+            }                    
+        }
+        return uniqueSolutions[key].minted;
     }
 }
 

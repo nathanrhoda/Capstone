@@ -1,6 +1,6 @@
 var Verifier = artifacts.require('Verifier');
 var SolnSquareVerifier = artifacts.require('SolnSquareVerifier');
-var Proof = require('./proof.json');
+var Proof = require('./proof1.json');
 const truffleAssert = require('truffle-assertions');
 
 
@@ -26,11 +26,16 @@ contract('SolnSquareVerifier', accounts => {
 
         // Test if an ERC721 token can be minted for contract - SolnSquareVerifier
         it('should be able to mint a ERC21 Token', async function () { 
-            
+            let isMinted = await this.contract.getUniqueSolutionByIndex.call(1);
+            assert.equal(isMinted, false, "Coin should not be minted");
+            await this.contract.add(Proof.proof.a, Proof.proof.b, Proof.proof.c, Proof.inputs, {from: account_one});                          
             let tx = await this.contract.mint(account_one);
             truffleAssert.eventEmitted(tx, 'Minted', (ev) => {                
                 return ev.isMinted == true;
             });              
+
+            isMinted = await this.contract.getUniqueSolutionByIndex.call(1);
+            assert.equal(isMinted, true, "Coin should be minted");
         })  
     });
 })    

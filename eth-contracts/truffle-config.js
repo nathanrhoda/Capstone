@@ -18,11 +18,16 @@
  *
  */
 
-// const HDWalletProvider = require('truffle-hdwallet-provider');
-// const infuraKey = "fj4jll3k.....";
+ require('dotenv').config();
+ var HDWalletProvider = require("@truffle/hdwallet-provider");
+ var mnemonicmeta = process.env["MNEMONIC-META"];
+ var mnemonic = process.env["MNEMONIC"];//"game adjust nut session alert found rigid canvas hurdle enforce stone range"
+ var tokenKey = process.env["ENDPOINT_KEY"];
+
+
 //
 // const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+//const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
   /**
@@ -48,6 +53,15 @@ module.exports = {
       network_id: "*",       // Any network (default: none)
      },
 
+     rinkeby:{
+      host: "localhost",
+      provider: function() {
+        return new HDWalletProvider(mnemonicmeta, "wss://rinkeby.infura.io/ws/v3/" + tokenKey);
+      },
+      network_id:4,
+      gas: 6721975,
+      gasPrice: 10000000000,                  
+    },
     // Another network with more advanced options...
     // advanced: {
       // port: 8777,             // Custom port

@@ -22,10 +22,12 @@ The capstone will build upon the knowledge you have gained in the course in orde
 
 # Contract Info
 
-* Contract Addresses:
-* Contract Abi: 
+* Contract Addresses: https://rinkeby.etherscan.io/address/0x0e7Cb0768FAA3BccE606E5D233B51bd38Baa738a
+* Contract Abi: https://github.com/nathanrhoda/Capstone/tree/main/eth-contracts/build
 * OpenSea MarketPlace Storefront:
 
 
 
 https://review.udacity.com/#!/rubrics/1712/view
+
+    ganache-cli "shuffle trip vanish horn myself tortoise chuckle child stage brother february shed"  --defaultBalanceEther 10000 -a 200 --gasLimit 300000000 --gasPrice 20000000000

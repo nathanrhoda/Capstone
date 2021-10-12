@@ -32,5 +32,8 @@ The capstone will build upon the knowledge you have gained in the course in orde
 
 # Buying 
 https://rinkeby.etherscan.io/tx/0xb411e8c981475a6b14bbddf8a8343e67e7eb3b4820243547d5bedd8454f26210
-
+https://rinkeby.etherscan.io/tx/0xf6f4d1f2db30a868abdfbaf94fa7303d83b9124b33650c2cadaafa6f13eaf092
+https://rinkeby.etherscan.io/tx/0x28394a7a7d6e644dee09216e865b4460bc9216cfd3e36b10d2e0b91213c91027
+https://rinkeby.etherscan.io/tx/0xd3361f41f9be3a7dd5e7e8a6c2bcab2f1f1ba23aedeb936c69c0b98bf4d0f32f
+https://rinkeby.etherscan.io/tx/0x94f44660cc47a2c7624e9ed639a4e3ee606b76679884530937c97d8accb416f8
 

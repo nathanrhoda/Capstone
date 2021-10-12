@@ -30579,7 +30579,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-10-09T12:08:57.251Z",
+  "updatedAt": "2021-10-09T13:57:04.638Z",
   "devdoc": {
     "methods": {
       "isApprovedForAll(address,address)": {

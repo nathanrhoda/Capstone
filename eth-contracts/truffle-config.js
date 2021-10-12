@@ -20,8 +20,7 @@
 
  require('dotenv').config();
  var HDWalletProvider = require("@truffle/hdwallet-provider");
- var mnemonicmeta = process.env["MNEMONIC-META"];
- var mnemonic = process.env["MNEMONIC"];//"game adjust nut session alert found rigid canvas hurdle enforce stone range"
+ var mnemonicmeta = process.env["MNEMONIC-META"]; 
  var tokenKey = process.env["ENDPOINT_KEY"];
 
 

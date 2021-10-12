@@ -30,10 +30,7 @@ The capstone will build upon the knowledge you have gained in the course in orde
 
 * https://rinkeby.etherscan.io/token/0x0e7cb0768faa3bcce606e5d233b51bd38baa738a?a=0x639eb9164e65de52a958e833f1e9857bc3d85e40
 
-
-
-# Transactions
-## Buying 
+# Buying 
 https://rinkeby.etherscan.io/tx/0xb411e8c981475a6b14bbddf8a8343e67e7eb3b4820243547d5bedd8454f26210
 
 
